@@ -392,16 +392,33 @@ createJUnitTest specResult prefix first is resultNode -> string -> boolean -> ~T
         suite as ~Test;
     fi;
 
+junitTest specs = (
+
+    result = specs none;
+    t = createJUnitTest result "" true;
+    println "test: \(t)";
+    t;
+);
+
+class YebspecJunitSuite 
+    static Test create(String moduleName)
+        load yeti.lang.compiler.eval;
+        import yeti.lang.compiler.CompileException;
+        
+        code ="m = load org.yeb.yebspec;sm = load \(moduleName);m.junitTest sm";
+        case evaluateYetiCode[][] code of
+            {result = Result obj}: obj is ~Object;
+            {result = CompileException ex}: throw (ex is ~CompileException);
+            {result = Exception ex}: throw (ex is ~Throwable);
+            {str} : throw new RuntimeException(string str);
+        esac unsafely_as ~Test,
+end;
+        
+    
+
 {
 
- 
-    junitTest specs = (
-
-        result = specs none;
-        t = createJUnitTest result "" true;
-        println "test: \(t)";
-        t;
-    ),
+    junitTest,
 
     setTLResultNode node = _parentNodeTL.value := node,
 

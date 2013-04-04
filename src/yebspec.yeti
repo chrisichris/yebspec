@@ -25,7 +25,8 @@ import junit.framework: Test,
                         AssertionFailedError;
 
 
-assertLabelThreadLocal = threadLocal "";
+assertLabelThreadLocal = 
+    threadLocal \"";
 
 testFail msg = 
     (msge = assertLabelThreadLocal.value ^ " " ^ msg;
@@ -89,7 +90,7 @@ assertNotEmpty value =
     assertThat "Was empty but should not" (not empty? value);
 
 assertContains e list1 =
-    if not (contains e list1) then
+    if not (contains? e list1) then
         testFail "Element [\(e)] of second list is not contained in first list"
     fi;
 
@@ -204,7 +205,7 @@ randomInts from to =
 
 listOneOf choice = 
     (a = array choice;
-    map do i: a.[i] done (listRandomInts 0 (length choice)));
+    map do i: a[i] done (listRandomInts 0 (length choice)));
 
 oneOf choice = _limit (listOneOf choice);
 
@@ -238,20 +239,21 @@ typedef resultNode = {
 _exceptionStrackTraceExcludes = 
     ["org.yeb.yebshell", "org.yeticl", "org.yeb.yebspec","yeti.lang"];
 
-_exceptionStackTrace count ex is number -> ~java.lang.Throwable -> string = 
+_exceptionStackTrace count ex  = 
     (import java.io:PrintWriter, 
                     StringWriter;
     import java.lang:StringBuilder, 
                      StackTraceElement;
 
-    wrapArray ex#getStackTrace()
+    list (ex is ~Throwable)#getStackTrace()
         |> filter
-            do stackTI:
-                stackT is ~StackTraceElement = stackTI;
-                name = string stackT#getClassName();
+            do stackT:
+                name = (stackT is ~StackTraceElement)#getClassName() as string;
                 fold do o s:
                            o and not (strStarts? name s)
-                        done true _exceptionStrackTraceExcludes;
+                    done 
+                    true 
+                    _exceptionStrackTraceExcludes;
             done
         |> take if count < 0 then 1000 else count fi
         |> map string
@@ -268,15 +270,15 @@ _newNode name is string -> resultNode = {
     var rights = 0,
     var fails = 0,
     var exceptions = 0
-}
+};
 
-_parentNodeTL = (x is None () | Some resultNode = none; threadLocal x);
+_parentNodeTL = threadLocal \none;
 
 _specs maybeParentNodeIn name action 
     is ( None () | Some resultNode ) -> string 
         -> (resultNode -> 'a) -> resultNode = 
     (//executes given action on each node and all its ancestors (parents)
-    withParents node ac = (
+    withParents node ac = 
         (ac node;
         case node.parent of
             None _ : ();

@@ -1,6 +1,13 @@
 load ybuilder.core.build;
 load ybuilder.core.base;
 
+//following comment-lines will be parsed by ybuilder to include the JUnitTask
+//on the classpath running this file
+//
+//@buildDependency "org.apache.ant" "ant-junit" "1.9.0" 
+//    [exclusion "junit" "junit", exclusion "org.apache.ant" "ant"];
+
+
 config = baseConfig "org.yeb" "yebspec" "1.0-SNAPSHOT";
 config.description := "Specification tests for yeti";
 

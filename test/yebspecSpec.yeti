@@ -1,0 +1,33 @@
+module yebspecSpec;
+
+load org.yeb.yebspec;
+
+
+specificationsFor "the yeti.lang.std module which is implicitly loaded in yeti"
+    do:
+    specification "for the list manipulation funtions" do:
+        baseList = [1 .. 20];
+ 
+        describe "map" do:
+            should "apply function to each element" do:
+                r = map (+2) baseList;
+                assertEquals [3..22] r;
+            done;
+            should "work on empty lists as well" do:
+                assertEquals [] (map id []);
+            done;
+        done;
+    done;
+ 
+    specification "for the string functions" do:
+        describe "strLength" do:
+            should "give right length" \(assertEquals 3 (strLength "123"));
+        done;
+    done;
+    //just describe threadLocal
+    describe "peekObject" do:
+        should "read struct" do:
+              _ = peekObject {for_json=E()};
+        done;
+    done;
+done;

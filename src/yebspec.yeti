@@ -496,7 +496,8 @@ end;
 
     specSuite,
 
-
+    runSpec spec = 
+        printResult print (spec none),
 
     testFail,
 

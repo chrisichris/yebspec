@@ -11,7 +11,8 @@ You can git clone it and build it with the included ybuilder.jar:
 
     java -jar ybuilder.jar clean, jar
 
-Or from my maven-repo <http://chrisichris.github.com/chrisis-maven-repo/snapshots/>. 
+Or from my maven-repo 
+<http://chrisichris.github.com/chrisis-maven-repo/snapshots/>. 
 
 		group-id: org.yeb
 		artifact-id: yebspec
